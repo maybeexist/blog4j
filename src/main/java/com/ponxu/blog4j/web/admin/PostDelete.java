@@ -5,8 +5,10 @@ package com.ponxu.blog4j.web.admin;
  * 
  * @author xwz
  */
-public class PostDelete extends AdminOAuthHandler {
-	public void get(int id) {
+public class PostDelete extends AdminOAuthHandler
+{
+	public void get(int id)
+	{
 		int i = postService.remove(id);
 		renderString(String.valueOf(i));
 	}

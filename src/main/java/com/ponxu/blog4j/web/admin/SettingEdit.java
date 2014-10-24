@@ -9,22 +9,27 @@ import com.ponxu.run.lang.StringUtils;
  * 
  * @author xwz
  */
-public class SettingEdit extends AdminOAuthHandler {
-	public void get() {
+public class SettingEdit extends AdminOAuthHandler
+{
+	public void get()
+	{
 		putVal("settings", settingService.queryAll());
 		renderTemplate(FTL.admin.SETING);
 	}
 
-	public void post() {
+	public void post()
+	{
 		String name = getParam("name");
 		String value = getParam("value");
 		String description = getParam("description");
-		
+
 		String old = settingService.get(name);
 
-		if (StringUtils.equalsIgnoreCase(name, "loginpassword")) {
+		if (StringUtils.equalsIgnoreCase(name, "loginpassword"))
+		{
 			// 传过来的和原密码不一样, 那么: md5
-			if (!StringUtils.equalsIgnoreCase(old, value)) {
+			if (!StringUtils.equalsIgnoreCase(old, value))
+			{
 				value = StringUtils.md5(value);
 			}
 		}

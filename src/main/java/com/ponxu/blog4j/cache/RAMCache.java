@@ -10,24 +10,30 @@ import java.util.Map;
  * 
  * @author xwz
  */
-public class RAMCache {
+public class RAMCache
+{
 	private static final Map<String, Object> CACHE = new HashMap<String, Object>();
 
-	public static Object get(String key) {
+	public static Object get(String key)
+	{
 		return CACHE.get(key);
 	}
 
-	public static void put(String key, Object value) {
+	public static void put(String key, Object value)
+	{
 		CACHE.put(key, value);
 	}
 
-	public static void clear() {
+	public static void clear()
+	{
 		CACHE.clear();
 	}
 
-	public static void clearByKeyPrefix(String prefix) {
+	public static void clearByKeyPrefix(String prefix)
+	{
 		List<String> clearKeys = new ArrayList<String>();
-		for (String key : CACHE.keySet()) {
+		for (String key : CACHE.keySet())
+		{
 			if (key.startsWith(prefix))
 				clearKeys.add(key);
 		}

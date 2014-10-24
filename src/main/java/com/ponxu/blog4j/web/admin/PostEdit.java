@@ -8,10 +8,13 @@ import com.ponxu.blog4j.web.FTL;
  * 
  * @author xwz
  */
-public class PostEdit extends AdminOAuthHandler {
-	public void get(int id) {
+public class PostEdit extends AdminOAuthHandler
+{
+	public void get(int id)
+	{
 		Post post = preparePost(id);
-		if (post == null) {
+		if (post == null)
+		{
 			renderString("找不到文章!");
 			return;
 		}
@@ -21,7 +24,8 @@ public class PostEdit extends AdminOAuthHandler {
 		renderTemplate(FTL.admin.POST_EDIT);
 	}
 
-	public void post(int id) {
+	public void post(int id)
+	{
 		Post post = preparePost(id);
 		post.setTitle(getParam("title"));
 		post.setUrl(getParam("url"));
@@ -31,20 +35,27 @@ public class PostEdit extends AdminOAuthHandler {
 		post.setType(getParam("type"));
 		int[] tagIds = getIntParams("tagid");
 
-		if (id == 0) {
+		if (id == 0)
+		{
 			id = postService.add(post, tagIds);
-		} else {
+		}
+		else
+		{
 			postService.modify(post, tagIds);
 		}
 
 		renderString(String.valueOf(id));
 	}
 
-	private Post preparePost(int id) {
+	private Post preparePost(int id)
+	{
 		Post post = null;
-		if (id > 0) {
+		if (id > 0)
+		{
 			post = postService.getById(id);
-		} else {
+		}
+		else
+		{
 			post = postService.getLatestDraft();
 			if (post == null)
 				post = new Post();

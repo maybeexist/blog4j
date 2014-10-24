@@ -9,37 +9,48 @@ import com.ponxu.run.lang.StringUtils;
  * 
  * @author xwz
  */
-public class Login extends BlogHandler {
-	public void get() {
-		if (!checkLoginFromCookie()) {
+public class Login extends BlogHandler
+{
+	public void get()
+	{
+		if (!checkLoginFromCookie())
+		{
 			// 未登录: 显示登录页面
 			toLogin();
-		} else {
+		}
+		else
+		{
 			// 已经登录: 转到后台首页
 			toIndex();
 		}
 	}
 
-	public void post() {
+	public void post()
+	{
 		String username = StringUtils.md5(getParam("username"));
 		String password = StringUtils.md5(getParam("password"));
 
-		if (checkLogin(username, password)) {
+		if (checkLogin(username, password))
+		{
 			// request().getSession().setAttribute("loginname", username);
 			// ??? SAE cookie路径有问题
 			setCookie("loginname", username);
 			setCookie("loginpassword", password);
 			toIndex();
-		} else {
+		}
+		else
+		{
 			toLogin();
 		}
 	}
 
-	private void toIndex() {
+	private void toIndex()
+	{
 		redirect("/admin/post-edit/0");
 	}
 
-	private void toLogin() {
+	private void toLogin()
+	{
 		renderTemplate(FTL.admin.LOGIN);
 	}
 }

@@ -19,7 +19,8 @@ import com.sina.sae.util.SaeUserInfo;
  * 
  * @author xwz
  */
-public class Config {
+public class Config
+{
 	private static final String DEFAULT_PROP_FILE = "blog4j.properties";
 
 	/** 是否 SAE */
@@ -55,79 +56,93 @@ public class Config {
 	public static String mgHost;
 	public static int mgPort;
 
-	static {
+	static
+	{
 		// 环境检测
-		if (checkSAE()) {
+		if (checkSAE())
+		{
 			isSAE = true;
-		} else if (checkCloudFoundry()) {
+		}
+		else if (checkCloudFoundry())
+		{
 			isCloudFoundry = true;
 		}
 
 		// 加载配置
 		loadCommon();
-		if (isSAE) {
+		if (isSAE)
+		{
 			loadSAE();
-		} else if (isCloudFoundry) {
+		}
+		else if (isCloudFoundry)
+		{
 			loadCloudFoundry();
 		}
 	}
 
 	/** 判断是否SAE */
-	private static boolean checkSAE() {
-		try {
+	private static boolean checkSAE()
+	{
+		try
+		{
 			Class.forName("com.sina.sae.util.SaeUserInfo");
 			// "appname": mean not sae or local
 			return !"appname".equals(SaeUserInfo.getAppName());
-		} catch (ClassNotFoundException e) {
+		}
+		catch (ClassNotFoundException e)
+		{
 			// I do not think it's SAE
 		}
 		return false;
 	}
 
 	/** 判断是否CloudFoundry */
-	private static boolean checkCloudFoundry() {
+	private static boolean checkCloudFoundry()
+	{
 		return StringUtils.isNotEmpty(System.getenv("VCAP_SERVICES"));
 	}
 
 	/** 通用配置 */
-	private static void loadCommon() {
-		try {
+	private static void loadCommon()
+	{
+		try
+		{
 			Properties prop = new Properties();
 			InputStream in = FileUtils.fromClassPath(DEFAULT_PROP_FILE);
 			prop.load(in);
 
 			// 基础设置
 			theme = prop.getProperty("theme", "simple");
-			pageSize = BeanUtils.cast(prop.getProperty("page_size", "15"),
-					int.class);
-			cache = BeanUtils.cast(prop.getProperty("cache", "false"),
-					Boolean.class);
-			sublength = BeanUtils.cast(prop.getProperty("sublength", "500"),
-					int.class);
+			pageSize = BeanUtils.cast(prop.getProperty("page_size", "15"), int.class);
+			cache = BeanUtils.cast(prop.getProperty("cache", "false"), Boolean.class);
+			sublength = BeanUtils.cast(prop.getProperty("sublength", "500"), int.class);
 
 			// 本地JDBC配置
 			dbUser = dbUser2 = prop.getProperty("db_user");
 			dbPassword = dbPassword2 = prop.getProperty("db_password");
 			dbName = dbName2 = prop.getProperty("db_name");
 			dbHost = dbHost2 = prop.getProperty("db_host", "127.0.1");
-			dbPort = dbPort2 = BeanUtils.cast(
-					prop.getProperty("db_port", "3307"), int.class);
+			dbPort = dbPort2 = BeanUtils.cast(prop.getProperty("db_port", "3307"), int.class);
 
 			in.close();
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			System.err.println(e.getMessage());
 		}
 	}
 
 	/** CloudFoundry 特殊配置 */
-	private static void loadCloudFoundry() {
-		try {
+	private static void loadCloudFoundry()
+	{
+		try
+		{
 			String jsonStr = System.getenv("VCAP_SERVICES");
 			JSONObject json = new JSONObject(jsonStr);
 
 			// mysql
-			JSONObject mysqlCfg = json.getJSONArray("mysql-5.1")
-					.getJSONObject(0).getJSONObject("credentials");
+			JSONObject mysqlCfg = json.getJSONArray("mysql-5.1").getJSONObject(0)
+					.getJSONObject("credentials");
 			dbUser = dbUser2 = mysqlCfg.getString("username");
 			dbPassword = dbPassword2 = mysqlCfg.getString("password");
 			dbName = dbName2 = mysqlCfg.getString("name");
@@ -135,8 +150,8 @@ public class Config {
 			dbPort = dbPort2 = mysqlCfg.getInt("port");
 
 			// mongodb用于文件存储
-			JSONObject mgCfg = json.getJSONArray("mongodb-2.0")
-					.getJSONObject(0).getJSONObject("credentials");
+			JSONObject mgCfg = json.getJSONArray("mongodb-2.0").getJSONObject(0)
+					.getJSONObject("credentials");
 			mgUser = mgCfg.getString("username");
 			mgPassword = mgCfg.getString("password");
 			mgName = mgCfg.getString("name");
@@ -144,13 +159,16 @@ public class Config {
 			mgHost = mgCfg.getString("host");
 			mgPort = mgCfg.getInt("port");
 
-		} catch (JSONException e) {
+		}
+		catch (JSONException e)
+		{
 			System.err.println(e.getMessage());
 		}
 	}
 
 	/** sae特殊配置 */
-	private static void loadSAE() {
+	private static void loadSAE()
+	{
 		dbUser = dbUser2 = SaeUserInfo.getAccessKey();
 		dbPassword = dbPassword2 = SaeUserInfo.getSecretKey();
 		dbName = dbName2 = "app_" + SaeUserInfo.getAppName();
@@ -160,20 +178,23 @@ public class Config {
 	}
 
 	/** 检查是否BAE环境, 若是加载特殊设置 (NM, 百度这个配置居然放在Header里面????!! 奇葩啊!!!!) */
-	public static void checkAndLoadBAE(HttpServletRequest request) {
-		if (!isBAE) {
+	public static void checkAndLoadBAE(HttpServletRequest request)
+	{
+		if (!isBAE)
+		{
 			String host = request.getHeader("BAE_ENV_ADDR_SQL_IP");
 			String port = request.getHeader("BAE_ENV_ADDR_SQL_PORT");
 			String username = request.getHeader("BAE_ENV_AK");
 			String password = request.getHeader("BAE_ENV_SK");
 
 			if (StringUtils.isEmpty(host) || StringUtils.isEmpty(port)
-					|| StringUtils.isEmpty(username)
-					|| StringUtils.isEmpty(password))
+					|| StringUtils.isEmpty(username) || StringUtils.isEmpty(password))
 				return;
 
-			synchronized (Config.class) {
-				if (!isBAE) {
+			synchronized (Config.class)
+			{
+				if (!isBAE)
+				{
 					dbUser = dbUser2 = username;
 					dbPassword = dbPassword2 = password;
 					// dbName = dbName2 = ""; // 在blog4j.proerpties中配置
@@ -185,14 +206,13 @@ public class Config {
 		}
 	}
 
-	public static String show() {
-		return "Config [isSAE=" + isSAE + ", isCloudFoundry=" + isCloudFoundry
-				+ ", theme=" + theme + ", pageSize=" + pageSize + ", cache="
-				+ cache + ", sublength=" + sublength + ", dbUser=" + dbUser
-				+ ", dbPassword=" + dbPassword + ", dbName=" + dbName
-				+ ", dbHost=" + dbHost + ", dbPort=" + dbPort + ", dbUser2="
-				+ dbUser2 + ", dbPassword2=" + dbPassword2 + ", dbName2="
-				+ dbName2 + ", dbHost2=" + dbHost2 + ", dbPort2=" + dbPort2
-				+ "]";
+	public static String show()
+	{
+		return "Config [isSAE=" + isSAE + ", isCloudFoundry=" + isCloudFoundry + ", theme=" + theme
+				+ ", pageSize=" + pageSize + ", cache=" + cache + ", sublength=" + sublength
+				+ ", dbUser=" + dbUser + ", dbPassword=" + dbPassword + ", dbName=" + dbName
+				+ ", dbHost=" + dbHost + ", dbPort=" + dbPort + ", dbUser2=" + dbUser2
+				+ ", dbPassword2=" + dbPassword2 + ", dbName2=" + dbName2 + ", dbHost2=" + dbHost2
+				+ ", dbPort2=" + dbPort2 + "]";
 	}
 }

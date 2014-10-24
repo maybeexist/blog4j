@@ -8,28 +8,35 @@ import com.ponxu.blog4j.web.FTL;
  * 
  * @author xwz
  */
-public class TagEdit extends AdminOAuthHandler {
-	public void get() {
+public class TagEdit extends AdminOAuthHandler
+{
+	public void get()
+	{
 		putVal("tags", tagService.queryAll());
 		renderTemplate(FTL.admin.TAG_LIST);
 	}
 
-	public void post() {
+	public void post()
+	{
 		int id = getIntParam("id");
 		Tag tag = prepareTag(id);
 		tag.setName(getParam("name"));
 		tag.setSort(getIntParam("sort", tag.getSort()));
 
-		if (id == 0) {
+		if (id == 0)
+		{
 			id = tagService.add(tag);
-		} else {
+		}
+		else
+		{
 			tagService.modify(tag);
 		}
 
 		renderString(String.valueOf(id));
 	}
 
-	private Tag prepareTag(int id) {
+	private Tag prepareTag(int id)
+	{
 		Tag tag = null;
 		tag = new Tag();
 		tag.setId(id);

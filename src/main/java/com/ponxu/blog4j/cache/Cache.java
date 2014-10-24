@@ -9,45 +9,64 @@ import com.sina.sae.memcached.SaeMemcache;
  * 
  * @author xwz
  */
-public class Cache {
+public class Cache
+{
 	private static SaeMemcache memcache;
 
-	static {
-		try {
+	static
+	{
+		try
+		{
 			memcache = new SaeMemcache();
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			memcache = null;
 		}
 	}
 
-	public static Object get(String key) {
-		if (Config.cache && StringUtils.isNotEmpty(key)) {
-			if (memcache != null) {
+	public static Object get(String key)
+	{
+		if (Config.cache && StringUtils.isNotEmpty(key))
+		{
+			if (memcache != null)
+			{
 				memcache.init();
 				return memcache.get(key);
-			} else {
+			}
+			else
+			{
 				return RAMCache.get(key);
 			}
 		}
 		return null;
 	}
 
-	public static void put(String key, Object value) {
-		if (Config.cache && StringUtils.isNotEmpty(key)) {
-			if (memcache != null) {
+	public static void put(String key, Object value)
+	{
+		if (Config.cache && StringUtils.isNotEmpty(key))
+		{
+			if (memcache != null)
+			{
 				memcache.init();
 				memcache.set(key, value);
-			} else {
+			}
+			else
+			{
 				RAMCache.put(key, value);
 			}
 		}
 	}
 
-	public static void clear() {
-		if (memcache != null) {
+	public static void clear()
+	{
+		if (memcache != null)
+		{
 			memcache.init();
 			memcache.flushAll();
-		} else {
+		}
+		else
+		{
 			RAMCache.clear();
 		}
 	}

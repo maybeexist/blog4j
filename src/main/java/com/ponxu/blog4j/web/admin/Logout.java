@@ -7,8 +7,10 @@ import com.ponxu.blog4j.web.BlogHandler;
  * 
  * @author xwz
  */
-public class Logout extends BlogHandler {
-	public void get() {
+public class Logout extends BlogHandler
+{
+	public void get()
+	{
 		removeCookie("loginname");
 		removeCookie("loginpassword");
 		request().getSession().invalidate();
